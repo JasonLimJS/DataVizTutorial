@@ -40,6 +40,12 @@ today= str(pd.to_datetime('today').strftime('%Y_%m_%d'))
 ###################################################################################################################################
 
 eq_listing= 'Finviz Filtered Counters.xlsx'
+api_key= '2RN97HFFVE23ZP1S'
+eq_ts_daily= pd.DataFrame()
+eq_master_list= pd.read_excel(eq_listing)
+
+
+
 
 
 

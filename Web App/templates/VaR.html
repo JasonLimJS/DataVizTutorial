@@ -198,7 +198,153 @@
             {% endraw %}
         </main>
 
-        </main>
+        <script>
+            feather.replace();
+
+            function plotGraph(){
+                var allTick= $('.portRow').find("td:eq(1)");
+                if (allTick.length==0){
+                    $('#varChart').empty();
+                    $('#dataTable').empty();
+                    $('#dataDisplay').hide();
+                    $('#returnDisplay').hide();
+                    return
+                };
+                var tickerList= [];
+                for (let i=0;i<allTick.length;i++){
+                    tickerList.push(allTick[i].textContent);
+                };
+                #console.log(tickerList);
+
+                var allPosition= $('.portRow').find("td:eq(2)");
+                var positionList= [];
+                for (let i=0;i<allPosition.length;i++){
+                    positionList.push(allPosition[i].textContent);
+                };
+
+                var allUnit= $('.portRow').find("td:eq(3)");
+                var unitList=[];
+                for (let i=0; i<allUnit.length; i++){
+                    unitList.push(allUnit[i].textContent);
+                };
+
+                var tickerDict={'ticker':tickerList, 'position':positionList, 'unit':unitList};
+                #console.log(JSON.stringify(tickerDict));
+                var tickerDictStr= JSON.stringify(tickerDict);
+                feather.replace();
+                $('#flashMessage').fadeIn('slow');
+                $('#flashMessage').fadeOut('slow');
+                $.ajax({
+                    data:{
+                        tickerDict:tickerDictStr
+                        },
+                    method: 'POST',
+                    url: '/compute'
+                })
+                .done(function(data){
+                    var jsonObj= JSON.parse(data.tickerDictQuery);
+                    var returnQuery= data.returnQuery;
+                    #console.log(jsonObj.ticker);
+                    var minVal= Math.min.apply(Math,returnQuery);
+                    var maxVal= Math.max.apply(MAth,returnQuery);
+                    var binSize= (maxVal- minVal)/99 ;
+                    var varTitle= data.varTitle;
+                    var startDate= data.startDate;
+                    var endDate= data.endDate;
+                    #console.log(returnQuery);
+                    var tickerList= data.tickerList;
+                    #console.log(tickerList);
+                    var propList= data.propList;
+                    var unitList= data.unitList;
+                    var positionList= data.positionList;
+                    var returnTitleList= data.returnTitleList;
+                    var returnOutput= data.returnOutput;
+
+                    //VaR Histogram
+                    var trace={
+                        x: returnQuery,
+                        type: 'histogram',
+                        xbins: {
+                            start: minVal,
+                            size: binSize,
+                            end: maxVal
+                        }
+                    };
+                    var data= [trace];
+
+                    var layout={
+                        xaxis: {title: "Daily return"},
+                        yaxis: {title: "Number of days with this return"},
+                        title: "<b> 1-Day 5% Value-at-Risk of Your Portfolio: " + varTitle + "</b> <br> " +
+                                "<i> Distribution of Daily Portfolio Returns </i> <br> " +
+                                "<i> Based on Data From " + startDate + " to " + endDate + "</i><br><br>"
+                    };
+
+                    Plotly.newPlot('varChart',data,layout);
+
+                    //Ticker Table
+                    var values=[
+                        tickerList,
+                        propList,
+                        unitList,
+                        positionList]
+
+                    var data_2=[{
+                        type:'table',
+                        header:{
+                            values:[["<b>Ticker</b>"], ["<b>Proportion</b>"],
+                                    ["<b>Unit</b>"], ["<b>Position</b>"]],
+                            align:["left","center"],
+                            line:{width: 1, color: '#506784'},
+                            fill:{color: '#119DFF'},
+                            font:{family:'Arial', size:12, color:'white'}
+                        },
+                        cells:{
+                            values: values,
+                            align:["left","center"],
+                            line:{width: 1, color: '#506784'},
+                            fill:{color: ['#25FEEFD','white']},
+                            font:{family:'Arial', size:11, color:['#506784']}
+                        }
+                    }]
+
+                    Plotly.newPlot('dataTable',data_2);
+
+                    #console.log(tickerList);
+                    #console.log(returnOutput);
+                    var varIndex= returnOutput[0].length*0.05;
+                    var varIndexLower= Math.floor(varIndex);
+                    var varIndexUpper= varIndexLower + 1;
+                    var upperLimit= returnOutput.length - 2;
+                    var unitReturnListLower= [];
+                    var unitReturnListUpper= [];
+                    var colorListLower= [] ;
+                    var colorListUpper= [] ;
+
+                    for (let i=1;i<upperLimit;i++){
+                        unitReturnListLower.push(returnOutput[i][varIndexLower-1]);
+                        unitReturnListUpper.push(returnOutput[i][varIndexUpper-1]);
+                    };
+
+                    for (let i=0;i<unitReturnListLower.length;i++){
+                        if (unitReturnListLower[i]<0){
+                            colorListLower.push('rgb(235,67,52)');
+                        } else {
+                            colorListLower.push('rgb(52,235,125)');
+                        }
+                    };
+
+                     for (let i=0;i<unitReturnListUpper.length;i++){
+                        if (unitReturnListUpper[i]<0){
+                            colorListUpper.push('rgb(235,67,52)');
+                        } else {
+                            colorListUpper.push('rgb(52,235,125)');
+                        }
+                    };
+
+
+        </script>
+
 
 
     </body>

@@ -101,6 +101,52 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row ml-3 mr-3">
+                                <p class="ml-3 mb-3 mr-3"><strong> Select company: </strong></p>
+                                <select id="universe" ng-model="tickerSelected" class="ml-3 mb-3 mr-3" ng-init="tickerSelected= tickers[0]">
+                                    <option ng-repeat="x in tickers">{{x}}</option>
+                                </select>
+                            </div>
+                            <div class="row ml-3 mr-3 mb-3">
+                                <p class="ml-3 mb-3 mr-5"><strong> Select unit(s): </strong></p>
+                                <input type="number" id="unitAdded" ng-model="unit" class="input-group-sm" min="1" ng-init="unit-1">
+                            </div>
+                            <div class="row ml-3 mr-3 mb-3">
+                                <p class="ml-3 mb-3 mr-5"><strong> Select position: </strong></p>
+                                <input type="radio" id="Long" ng-model="myPosition" name="myPosition" value="Long">Long</input>
+                                <input type="radio" id="Short" ng-model="myPosition" name="myPosition" value="Short">Short</input>
+                            </div>
+                            <div class="row ml-3 mr-3 mb-3">
+                                <p class="ml-3 mb-3 mr-5"><strong> VaR computational method: </strong></p>
+                                <p class="badge badge-success" style="cursor:pointer;">Historical</p>
+                            </div>
+                            <i id="addTicker" data-feather="plus-circle" class="ml-5 mr-3 mb-3" style="cursor:pointer;color:green;"></i>
+                        </div>
+                    </div>
+                    <div class="column mt-5 ml-3">
+                        <div id="flashMessage" class="row text-primary" style="display:none">
+                            <p id="unitAdded" class="ml-1">Added {{unit}} unit(s) of: </p>
+                            <p id="tickerSelected" class="ml-1"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column mr-3">
+                        <div class="pt-5 mt-5 ml-5"></div>
+                        <div class="row pt-2 mt-2 ml-5">
+                            <table id="Port" class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">
+                                            <i id="minusTickerMaster" data-feather="x-circle" style="cursor:pointer;color:red;"></i>
+                                        </th>
+                                        <th scope="col">Ticker</th>
+                                        <th scope="col">Position</th>
+                                        <th scope="col">Unit</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

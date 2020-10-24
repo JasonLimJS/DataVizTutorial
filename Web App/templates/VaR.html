@@ -214,7 +214,7 @@
                 for (let i=0;i<allTick.length;i++){
                     tickerList.push(allTick[i].textContent);
                 };
-                #console.log(tickerList);
+                //console.log(tickerList);
 
                 var allPosition= $('.portRow').find("td:eq(2)");
                 var positionList= [];
@@ -229,7 +229,7 @@
                 };
 
                 var tickerDict={'ticker':tickerList, 'position':positionList, 'unit':unitList};
-                #console.log(JSON.stringify(tickerDict));
+                //console.log(JSON.stringify(tickerDict));
                 var tickerDictStr= JSON.stringify(tickerDict);
                 feather.replace();
                 $('#flashMessage').fadeIn('slow');
@@ -244,16 +244,16 @@
                 .done(function(data){
                     var jsonObj= JSON.parse(data.tickerDictQuery);
                     var returnQuery= data.returnQuery;
-                    #console.log(jsonObj.ticker);
+                    //console.log(jsonObj.ticker);
                     var minVal= Math.min.apply(Math,returnQuery);
                     var maxVal= Math.max.apply(MAth,returnQuery);
                     var binSize= (maxVal- minVal)/99 ;
                     var varTitle= data.varTitle;
                     var startDate= data.startDate;
                     var endDate= data.endDate;
-                    #console.log(returnQuery);
+                    //console.log(returnQuery);
                     var tickerList= data.tickerList;
-                    #console.log(tickerList);
+                    //console.log(tickerList);
                     var propList= data.propList;
                     var unitList= data.unitList;
                     var positionList= data.positionList;
@@ -310,8 +310,8 @@
 
                     Plotly.newPlot('dataTable',data_2);
 
-                    #console.log(tickerList);
-                    #console.log(returnOutput);
+                    //console.log(tickerList);
+                    //console.log(returnOutput);
                     var varIndex= returnOutput[0].length*0.05;
                     var varIndexLower= Math.floor(varIndex);
                     var varIndexUpper= varIndexLower + 1;
@@ -341,6 +341,228 @@
                             colorListUpper.push('rgb(52,235,125)');
                         }
                     };
+
+                    var trace_3={
+                        x: tickerList,
+                        y: unitReturnListLower,
+                        text: unitReturnListLower.map((x)=>(x*100).toFixed(2)).map(String).map(x)=> x + '%'),
+                        textposition: 'auto',
+                        hoverinfo: 'none' ,
+                        marker: {
+                            color: colorListLower
+                        },
+                        type: 'bar'
+                    };
+
+                    var data_3= [trace_3];
+
+                    var varDateLower= [returnOutput[0][varIndexLower-1]].map((dt)=>dt.substring(0,dt.length-13));
+
+                    var layout_3={
+                        title: '<b>Forth-worst Portfolip Return: ' + (returnOutput[upperLimit][varIndexLower-1]*100).toFixed(2) + ' % (' + varDateLower + ')</b>',
+                        yaxis: {title: 'Daily price change, %',titlefont: {size:16}}
+                    };
+
+                    Plotly.newPlot('returnTableLower',data_3,layout_3);
+
+                    var returnWord= unitReturnListLower.map((x)=>(x*100).toFixed(2)).map(String).map((x)=>x + '%');
+                    var returnWordUpper= unitReturnListUpper.map((x)=>(x*100).toFixed(2)).map(String).map((x)=>x + '%');
+                    var outputStr = "";
+                    var outputStrUpper = "" ;
+                    for (let i=0;i<propList.length;i++){
+                        outputStr= outputStr + propList[i] + ' * ' + returnWord[i] + " + " ;
+                        outputStrUpper= outputStrUpper + propList[i] + ' * ' + returnWordUpper[i] + " + " ;
+                    };
+                    outputStr= outputStr.substring(0,outputStr.length-3);
+                    outputStrUpper= outputStrUpper.substring(0,outputStrUpper.length-3);
+                    outputStr= outputStr + "= " + (returnOutput[upperLimit][varIndexLower - 1]*100).toFixed(2) + '%';
+                    outputStrUpper= outputStrUpper + "= " + (returnOutput[upperLimit][varIndexUpper - 1]*100).toFixed(2) + '%';
+
+                    //console.log(outputStr);
+                    // $('#returnLowerFormula').text(outputStr);
+                    //$('#returnUpperFormula').text(outputStrUpper);
+
+                    var trace_5={
+                        x: tickerList,
+                        y: unitReturnListUpper,
+                        text: unitReturnListUpper.map((x)=>(x*100).toFixed(2)).map(String).map((x)=>x + '%'),
+                        textposition: 'auto' ,
+                        hoverinfo: 'none',
+                        marker:{
+                            color: colorListUpper
+                        },
+                        type:'bar'
+                    };
+
+                    var data_5= [trace_5];
+
+                    var varDateUpper= [returnOutput[0][varIndexUpper - 1]].map((dt)=>dt.substring(0,dt.length-13));
+
+                    var layout_5={
+                         title: '<b>Fifth-worst Portfolio Return: ' + (returnOutput[upperLimit][varIndexUpper-1]*100).toFixed(2) + '% (' + varDateUpper + ')</b>',
+                         yaxis: {title: 'Daily price changes, %',titlefont:{size:16}}
+                     };
+
+                     Plotly.newPlot('returnTableUpper',data_5,layout_5);
+
+                     //console.log(propList);
+
+                     var data_4=[{
+                        type: 'table',
+                        columnwidth: Array(returnOutput.length).fill(250),
+                        header:{
+                            values:['Date','Portfolio Return'],
+                            align:["left","center"],
+                            line:{width: 1, color: '#506784'},
+                            fill:{color:'#119DFF'},
+                            font:{family:"Arial",size:12,color:"white"}
+                        },
+                        cells:{
+                            values:[returnOutput[0].map((dt)=>dt.substring(0,dt.length-13)),returnOutput[upperLimit].map((x)=>(x*100).toFixed(2)).map(String).map((x)=>x + '%')],
+                            align:["left","center"],
+                            line:{color:'#506784', width: 1},
+                            fill:{color: ['#25FEFD','white']},
+                            font:{family:"Arial",size:11,color:["#506784"]}
+                    }];
+
+                    var layout_4={width: 750};
+
+                    Plotly.newPlot('portReturnTable',data_4,layout_4);
+
+                    $('#dataDisplay').show();
+                    $('#returnDisplay').show();
+
+                })
+
+            };
+
+            function displayTable(){
+                $('#dataTable').text('Table here')
+            }
+
+            $(document).ready(function(){
+                $('#unitAdded').val("1");
+                $('#Long').prop("checked",true);
+                $('#tickerSelected').text($('#universe').find('option:selected').val());
+            });
+
+            $('#universe').change(function(){
+                $('#tickerSelected').text($('#universe').find('option:selected').val());
+            });
+
+            var app= angular.module('frmApp',[]);
+            app.controller('frmCtrl',function($scope){
+                $scope.debugger= "started";
+                //console.log($scope.debugger);
+                $scope.tickers= {{tickerList|safe}};
+            });
+            $('#addTicker').mouseenter(
+                function(){
+                    $(this).css('color','blue');
+                }
+            );
+            $('#addTicker').mouseleave(
+                function(){
+                    $(this).css('color','green');
+                }
+            );
+            $('#addTicker').click(function(){
+                //console.log($('#unitAdded').val());
+                var unitAdded=$('#unitAdded').val();
+                if (!unitAdded){
+                    alert ('Please fill in all required fields!')
+                };
+
+                var pos= $("input[type='radio']:checked").val();
+
+                $('#Port tbody').after('<tr class="portRow" style><td class="DeleteButton">' + '<i id="minusTicker" data-feather="minus-circle" style="cursor:pointer;color:red;"></i> + '</td><td>' + $('#tickerSelected').text() + '</td><td>' + pos + '</td><td>' + $('#unitAdded').val() + '</td></tr>');
+                plotGraph();
+            });
+            $('#portRow').mouseenter(
+                function(){
+                    $(this).css('background','yellow');
+                };
+                $('#Port').on('click','.DeleteButton',function(){
+                    var deletedRow= $(this).closest('tr').find('td');
+                    //console.log($(this).closest('tr').find('td').length);
+                    $(this).closest('tr').remove();
+                    plotGraph();
+                });
+                $('#minusTickerMaster').mouseenter(
+                    function(){
+                        $(this).css('color','blue');
+                    }
+                );
+                $('#minusTickerMaster').mouseleave(
+                    function(){
+                        $(this).css('color','red');
+                    }
+                );
+                $('#minusTickerMaster').click(function(){
+                    //console.log('clicked');
+                    $('.portRow').empty();
+                    $('#varChart').empty();
+                    $('#dataDisplay').hide();
+                    $('#returnDisplay').hide();
+                    $('#dataTable').empty();
+                    $('#returnTableLower').empty();
+                    $('#portReturnTable').empty();
+                    $('#returnLowerFormula').empty();
+                    $('#returnUpperFormula').empty();
+                    $('#returnTableUpper').empty();
+                });
+                $('#sel_all').click(function(){
+                    //console.log('ALL selected');
+                    $('#closeModal').click();
+                    $('#filter').text('Filter: All');
+                    $('#universe').empty();
+
+                    var tickerList= {{tickerList|safe}};
+                    for (let i=0;i<tickerList.length;i++){
+                        var optionList= '<option ng-repeat="x in tickers" class="ng-binding ng-scope" value="' + tickerList[i] + '">' + tickerList[i] + '</option>'
+                        $('#universe').append(optionList);
+                    };
+                });
+
+                $('#sel_tech').click(function(event){
+                    //console.log('Technology selected');
+                    $('#closeModal').click();
+                    $('#filter').text('Filter: Technology');
+                    $.ajax({
+                        data:{
+                            filter: 'Technology'
+                        },
+                        method: 'POST' ,
+                        url: '/process'
+                    })
+                    .done(function(data){
+                        var filteredList= data.filteredList[0].split(',');
+                        $('#universe').empty();
+                        for (let i=0;i<filteredList.length;i++){
+                            if (i==0){
+                                var optionList= '<option ng-repeat="x in tickers" class="ng-binding ng-scope value="' + filteredList[i] + '" selected="selected">' + filteredList[i] + '</option>'
+                            }else{
+                                var optionList= '<option ng-repeat="x in tickers" class="ng-binding ng-scope value="' + filteredList[i] + '">' + filteredList[i] + '</option>'
+                            }
+                            $('#universe').append(optionList);
+                        };
+
+                        $('#tickerSelected').text(filteredList[0]);
+                    })
+                        event.preventDefault();
+                })
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         </script>

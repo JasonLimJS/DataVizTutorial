@@ -552,25 +552,168 @@
                         event.preventDefault();
                 })
 
+                $('#sel_comm').click(function(event){
+                    //console.log('Communication selected');
+                    $('#closeModal').click();
+                    $('#filter').text('Filter: Communication');
+                    $.ajax({
+                        data:{
+                            filter: 'Communication'
+                        },
+                        method: 'POST' ,
+                        url: '/process'
+                    })
+                    .done(function(data){
+                        var filteredList= data.filteredList[0].split(',');
+                        $('#universe').empty();
+                        for (let i=0;i<filteredList.length;i++){
+                                var optionList= '<option ng-repeat="x in tickers" class="ng-binding ng-scope value="' + filteredList[i] + '">' + filteredList[i] + '</option>'
+                                $('#universe').append(optionList);
+                        };
+                        $('#tickerSelected').text(filteredList[0]);
+                    })
+                        event.preventDefault();
+                })
 
+                $('#sel_healthcare').click(function(event){
+                    //console.log('Healthcare selected');
+                    $('#closeModal').click();
+                    $('#filter').text('Filter: Healthcare');
+                    $.ajax({
+                        data:{
+                            filter: 'Healthcare'
+                        },
+                        method: 'POST' ,
+                        url: '/process'
+                    })
+                    .done(function(data){
+                        var filteredList= data.filteredList[0].split(',');
+                        $('#universe').empty();
+                        for (let i=0;i<filteredList.length;i++){
+                            var optionList= '<option ng-repeat="x in tickers" class="ng-binding ng-scope value="' + filteredList[i] + '">' + filteredList[i] + '</option>'
+                            $('#universe').append(optionList);
+                        };
+                        $('#tickerSelected').text(filteredList[0]);
+                    })
+                        event.preventDefault();
+                })
 
+                $('#sel_concyclical').click(function(event){
+                    //console.log('Consumer Cyclical selected');
+                    $('#closeModal').click();
+                    $('#filter').text('Filter: Consumer Cyclical');
+                    $.ajax({
+                        data:{
+                            filter: 'Consumer Cyclical'
+                        },
+                        method: 'POST' ,
+                        url: '/process'
+                    })
+                    .done(function(data){
+                        var filteredList= data.filteredList[0].split(',');
+                        $('#universe').empty();
+                        for (let i=0;i<filteredList.length;i++){
+                            var optionList= '<option ng-repeat="x in tickers" class="ng-binding ng-scope value="' + filteredList[i] + '">' + filteredList[i] + '</option>'
+                            $('#universe').append(optionList);
+                        };
+                        $('#tickerSelected').text(filteredList[0]);
+                    })
+                        event.preventDefault();
+                })
 
+                $('#sel_industrials').click(function(event){
+                    //console.log('Industrials selected');
+                    $('#closeModal').click();
+                    $('#filter').text('Filter: Industrials');
+                    $.ajax({
+                        data:{
+                            filter: 'Industrials'
+                        },
+                        method: 'POST' ,
+                        url: '/process'
+                    })
+                    .done(function(data){
+                        var filteredList= data.filteredList[0].split(',');
+                        $('#universe').empty();
+                        for (let i=0;i<filteredList.length;i++){
+                            var optionList= '<option ng-repeat="x in tickers" class="ng-binding ng-scope value="' + filteredList[i] + '">' + filteredList[i] + '</option>'
+                            $('#universe').append(optionList);
+                        };
+                        $('#tickerSelected').text(filteredList[0]);
+                    })
+                        event.preventDefault();
+                })
 
+                $('#sel_condefensive').click(function(event){
+                    //console.log('Consumer Defensive selected');
+                    $('#closeModal').click();
+                    $('#filter').text('Filter: Consumer Defensive');
+                    $.ajax({
+                        data:{
+                            filter: 'Consumer Defensive'
+                        },
+                        method: 'POST' ,
+                        url: '/process'
+                    })
+                    .done(function(data){
+                        var filteredList= data.filteredList[0].split(',');
+                        $('#universe').empty();
+                        for (let i=0;i<filteredList.length;i++){
+                            var optionList= '<option ng-repeat="x in tickers" class="ng-binding ng-scope value="' + filteredList[i] + '">' + filteredList[i] + '</option>'
+                            $('#universe').append(optionList);
+                        };
+                        $('#tickerSelected').text(filteredList[0]);
+                    })
+                        event.preventDefault();
+                })
 
+                $('#sel_utilities').click(function(event){
+                    //console.log('Utilities selected');
+                    $('#closeModal').click();
+                    $('#filter').text('Filter: Utilities');
+                    $.ajax({
+                        data:{
+                            filter: 'Utilities'
+                        },
+                        method: 'POST' ,
+                        url: '/process'
+                    })
+                    .done(function(data){
+                        var filteredList= data.filteredList[0].split(',');
+                        $('#universe').empty();
+                        for (let i=0;i<filteredList.length;i++){
+                            var optionList= '<option ng-repeat="x in tickers" class="ng-binding ng-scope value="' + filteredList[i] + '">' + filteredList[i] + '</option>'
+                            $('#universe').append(optionList);
+                        };
+                        $('#tickerSelected').text(filteredList[0]);
+                    })
+                        event.preventDefault();
+                })
 
-
-
-
-
-
+                $('#sel_financial').click(function(event){
+                    //console.log('Financial Services selected');
+                    $('#closeModal').click();
+                    $('#filter').text('Filter: Financial Services');
+                    $.ajax({
+                        data:{
+                            filter: 'Financial Services'
+                        },
+                        method: 'POST' ,
+                        url: '/process'
+                    })
+                    .done(function(data){
+                        var filteredList= data.filteredList[0].split(',');
+                        $('#universe').empty();
+                        for (let i=0;i<filteredList.length;i++){
+                            var optionList= '<option ng-repeat="x in tickers" class="ng-binding ng-scope value="' + filteredList[i] + '">' + filteredList[i] + '</option>'
+                            $('#universe').append(optionList);
+                        };
+                        $('#tickerSelected').text(filteredList[0]);
+                    })
+                        event.preventDefault();
+                })
 
 
         </script>
-
-
-
     </body>
-
-
-
 </html>

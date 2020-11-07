@@ -251,5 +251,5 @@ output_data_return.drop('index',axis=1,inplace=True)
 output_data_return.to_csv('return_data.csv',index=False)
 remover_list= combined_01_remover + combined_02_remover + combined_03_remover + combined_04_remover + combined_05_remover
 
-
+pickle.dump(remover_list,open('remover_list.p','wb'))
 

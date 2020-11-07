@@ -6,7 +6,8 @@ Created on Tue Oct 27 00:06:48 2020
 """
 #Sector Ticker_Sector total
 import pandas as pd
-import os 
+import os
+import pickle
 
 os.chdir(r'C:\Users\jason\Documents\FRMViz\Web App\backend')
 master_data_all= pd.read_csv('extracted_NASDAQ_data.csv')
@@ -15,11 +16,13 @@ finance_exclusion_list= ['Exchange Traded Fund','Shell Companies','Closed-End Fu
                          'Closed-End Fund - Equity','Closed-End Fund - Foreign']
 
 master_data= master_data_all[~master_data_all.Industry.isin(finance_exclusion_list)]
+remover_list= pickle.load(open('remover_list.p','rb'))
+master_data= master_data[~master_data.Ticker.isin(remover_list)]
 
 print('There are %d sectors' % len(master_data.Sector.drop_duplicates()))
 print(master_data.Sector.drop_duplicates().tolist())
 
-print('There are %d industries' % len(master_data.Industry.drop_duplicates()))
+print('There are %d industries' % len(master_data.Industry.drop_duplicates())) 
 
 master_data['Volume']= master_data.Volume.map(lambda x: x.replace(',',''))
 master_data['Volume']= master_data['Volume'].astype(float)

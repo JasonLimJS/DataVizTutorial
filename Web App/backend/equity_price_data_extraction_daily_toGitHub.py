@@ -8,6 +8,9 @@ import re
 import datetime
 import pyodbc
 import sys
+from datetime import datetime
+from pandas.tseries.offsets import BDay
+
 server = 'SERVER'
 database = 'DATABASE'
 username = 'USERNAME'
@@ -16,6 +19,8 @@ driver= '{ODBC Driver 17 for SQL Server}'
 
 os.chdir(r'C:\Users\jason\Documents\FRMViz\Web App\backend')
 connect_stat= 'DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password
+
+DAYS_OFFSET= 1
 
 def adjust_NA(var):
     if pd.isna(var):
@@ -65,7 +70,7 @@ api_key= 'API_KEY'
 eq_ts_daily= pd.DataFrame()
 eq_master_list= pd.read_excel(eq_listing,sheet_name='Iter_1')
 eq_ticker_list= eq_master_list.ticker.tolist()
-targetDt= '2020-10-20'
+targetDt= (datetime.today() - BDay(DAYS_OFFSET)).strftime('%Y-%m-%d')
 
 with open('price_extraction_1.txt','w') as f:
     for ticker in eq_ticker_list:

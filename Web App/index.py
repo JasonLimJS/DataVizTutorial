@@ -11,10 +11,10 @@ import urllib.parse
 SECTOR_DF= pd.read_csv(os.path.join(os.path.realpath('.'),'backend','sector_grp.csv'))
 return_df= pd.read_csv(os.path.join(os.path.realpath('.'),'backend','return_data.csv'),index_col='Date')
 
-server = 'frmviz.database.windows.net'
-database = 'FRMViz'
-username = 'frmviz_admin'
-password = 'WelcomeFRM1234$'
+server = 'SERVER'
+database = 'DB'
+username = 'USER'
+password = 'PASSWORD'
 driver= '{ODBC Driver 17 for SQL Server}'
 
 params = urllib.parse.quote_plus(f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username}PWD={password}')
@@ -85,5 +85,6 @@ def compute():
     calc_df['effective_return']= calc_df.effective_position * calc_df['return']
     min_date_str= min(calc_df.Date.tolist()).strftime('%d %b %Y')
     max_date_str= max(calc_df.Date.tolist()).strftime('%d %b %Y')
+    var_comp= pd.DataFrame(calc_df.groupby('Date')['effective_return'].sum())
 
 

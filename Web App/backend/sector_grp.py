@@ -70,7 +70,8 @@ for listing in sector_grp.Ticker.tolist():
 master_list_unique= sorted(list(set(master_list))) 
 with open('all_ticks.pkl','wb') as w:
     pickle.dump(master_list_unique,w)
-    
+
+
     
     
     

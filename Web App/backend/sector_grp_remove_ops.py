@@ -35,6 +35,8 @@ with open('all_ticks.pkl','wb') as w:
     pickle.dump(master_list_unique,w)
     
 sector_grp.to_csv('sector_grp.csv')
+
+
     
     
     

@@ -7,20 +7,17 @@ import json
 import math
 from datetime import datetime
 import urllib.parse
+import numpy as np
 
 SECTOR_DF= pd.read_csv(os.path.join(os.path.realpath('.'),'backend','sector_grp.csv'))
 return_df= pd.read_csv(os.path.join(os.path.realpath('.'),'backend','return_data.csv'),index_col='Date')
 
-server = 'SERVER'
-database = 'DB'
-username = 'USER'
-password = 'PASSWORD'
-driver= '{ODBC Driver 17 for SQL Server}'
+ALL_TICKS_PATH= os.path.join(os.path.realpath('.'),'backend','all_ticks.pkl')
+test_list= pickle.load(open(ALL_TICKS_PATH,'rb'))
 
-params = urllib.parse.quote_plus(f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username}PWD={password}')
+params = urllib.parse.quote_plus(f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password}')
 
 app= Flask(__name__)
-app.config["SECRET_KEY"]="secret_cannot_tell"
 app.config["SQLALCHEMY_DATABASE_URI"]= "mssql+pyodbc:///?odbc_connect=%s" % params
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=False
 
@@ -41,7 +38,7 @@ class userInteractivity(db.Model):
 
 @app.route('/')
 def index():
-    return render_template('VaR.html')
+    return render_template('VaR.html',tickerList=test_list)
 
 @app.route('/process',methods=['POST'])
 def process():
@@ -55,7 +52,8 @@ def compute():
     jsonObj= request.form['tickerDict']
     jsonObj_dict= json.loads(jsonObj)
     sel_ticker= jsonObj_dict['ticker']
-    sel_ticker_filtered= [x[:x.find('-')] for x in sel_ticker]
+    sel_ticker_filtered= [x[:x.find('-')].strip() for x in sel_ticker]
+    #print(sel_ticker_filtered)
     sel_post= jsonObj_dict['position']
     sel_post_filtered= [1 if x=='Long' else -1 for x in sel_post]
     sel_units= jsonObj_dict['unit']
@@ -69,6 +67,7 @@ def compute():
     sum_sel_df.reset_index(inplace=True)
     sel_df= sum_sel_df
     sel_df['effective_position']= sel_df.position * sel_df.units
+    #print(sel_df)
 
     _user= userInteractivity(datetime.utcnow(),sel_ticker_filtered[0],sel_post[0],sel_units[0])
     db.session.add(_user)
@@ -107,6 +106,7 @@ def compute():
     output_sel_df['Position']= output_sel_df.Position.map(lambda x:'Long' if x==1 else 'Short')
     output_sel_df['Proportion_Desc']= output_sel_df['Proportion'].map(lambda x: str(round(x*100,2)) + '%')
     tickerList= output_sel_df.Ticker.tolist()
+    #print(tickerList)
     propList= output_sel_df.Proportion_Desc.tolist()
     unitList= output_sel_df.Unit.tolist()
     positionList= output_sel_df.Position.tolist()

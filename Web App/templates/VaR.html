@@ -2,6 +2,7 @@
 <html lang="en" dir=ltr">
     <head>
         <meta charset="utf-8">
+        <title> Financial Viz</title>
 
         <!--CSS only -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -103,7 +104,7 @@
                             </div>
                             <div class="row ml-3 mr-3">
                                 <p class="ml-3 mb-3 mr-3"><strong> Select company: </strong></p>
-                                <select id="universe" ng-model="tickerSelected" class="ml-3 mb-3 mr-3" ng-init="tickerSelected= tickers[0]">
+                                <select id="universe" ng-model="tickerSelected" class="ml-3 mb-3 mr-3 " ng-init="tickerSelected= tickers[0]">
                                     <option ng-repeat="x in tickers">{{x}}</option>
                                 </select>
                             </div>
@@ -246,7 +247,7 @@
                     var returnQuery= data.returnQuery;
                     //console.log(jsonObj.ticker);
                     var minVal= Math.min.apply(Math,returnQuery);
-                    var maxVal= Math.max.apply(MAth,returnQuery);
+                    var maxVal= Math.max.apply(Math,returnQuery);
                     var binSize= (maxVal- minVal)/99 ;
                     var varTitle= data.varTitle;
                     var startDate= data.startDate;
@@ -311,7 +312,7 @@
                     Plotly.newPlot('dataTable',data_2);
 
                     //console.log(tickerList);
-                    //console.log(returnOutput);
+                    console.log(returnOutput);
                     var varIndex= returnOutput[0].length*0.05;
                     var varIndexLower= Math.floor(varIndex);
                     var varIndexUpper= varIndexLower + 1;
@@ -345,7 +346,7 @@
                     var trace_3={
                         x: tickerList,
                         y: unitReturnListLower,
-                        text: unitReturnListLower.map((x)=>(x*100).toFixed(2)).map(String).map(x)=> x + '%'),
+                        text: unitReturnListLower.map((x)=>(x*100).toFixed(2)).map(String).map((x)=> x + '%'),
                         textposition: 'auto',
                         hoverinfo: 'none' ,
                         marker: {
@@ -418,12 +419,12 @@
                             font:{family:"Arial",size:12,color:"white"}
                         },
                         cells:{
-                            values:[returnOutput[0].map((dt)=>dt.substring(0,dt.length-13)),returnOutput[upperLimit].map((x)=>(x*100).toFixed(2)).map(String).map((x)=>x + '%')],
+                            values:[returnOutput[0].map((dt)=>dt.substring(0,dt.length-13)),returnOutput[upperLimit].map((x)=>(x*100).toFixed(4)).map(String).map((x)=>x + '%')],
                             align:["left","center"],
                             line:{color:'#506784', width: 1},
                             fill:{color: ['#25FEFD','white']},
                             font:{family:"Arial",size:11,color:["#506784"]}
-                    }];
+                    }}];
 
                     var layout_4={width: 750};
 
@@ -453,7 +454,7 @@
             var app= angular.module('frmApp',[]);
             app.controller('frmCtrl',function($scope){
                 $scope.debugger= "started";
-                //console.log($scope.debugger);
+                console.log($scope.debugger);
                 $scope.tickers= {{tickerList|safe}};
             });
             $('#addTicker').mouseenter(
@@ -475,13 +476,13 @@
 
                 var pos= $("input[type='radio']:checked").val();
 
-                $('#Port tbody').after('<tr class="portRow" style><td class="DeleteButton">' + '<i id="minusTicker" data-feather="minus-circle" style="cursor:pointer;color:red;"></i> + '</td><td>' + $('#tickerSelected').text() + '</td><td>' + pos + '</td><td>' + $('#unitAdded').val() + '</td></tr>');
+                $('#Port tbody').after('<tr class="portRow" style><td class="DeleteButton">' + '<i id="minusTicker" data-feather="minus-circle" style="cursor:pointer;color:red;"></i>' + '</td><td>' + $('#tickerSelected').text() + '</td><td>' + pos + '</td><td>' + $('#unitAdded').val() + '</td></tr>');
                 plotGraph();
             });
             $('#portRow').mouseenter(
                 function(){
                     $(this).css('background','yellow');
-                };
+                });
                 $('#Port').on('click','.DeleteButton',function(){
                     var deletedRow= $(this).closest('tr').find('td');
                     //console.log($(this).closest('tr').find('td').length);
